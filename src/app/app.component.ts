@@ -4,7 +4,7 @@ import { TourManager } from './tour-util/tour-manager';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'custom-tour';
@@ -14,15 +14,15 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.tourManager = new TourManager();
 
-    this.tourManager.steps = [
-      {
-        title: 'Welcome',
-        description: 'Hello World! 👋',
-      },
+    const steps = [
+      // {
+      //   title: 'Welcome',
+      //   description: 'Hello World! 👋',
+      // },
       {
         title: 'Twitter',
         // element: document.querySelector('.twitter-link') as HTMLElement,
-        selector: 'twitter-link',
+        element: '.twitter-link',
         description: 'Follow us on Twitter',
       },
       {
@@ -46,6 +46,12 @@ export class AppComponent implements OnInit {
       },
     ];
 
+    this.tourManager.setSteps(steps);
+
     this.tourManager.start();
+
+    setInterval(() => {
+      this.tourManager.goToNextStep();
+    }, 3000);
   }
 }

@@ -2,7 +2,6 @@ import { emptyDomElement } from './dom-util';
 import { TourStep } from './tour-step';
 
 export class TourManager {
-
   steps: TourStep[] = [];
 
   currentStep!: TourStep;
@@ -25,7 +24,10 @@ export class TourManager {
   private createWrapperDomForTourManager() {
     // create wrapper div for containing mask and spotlight div
     const wrapper = document.createElement('div');
-    wrapper.classList.add('tour-manager-wrapper', 'tour-manager-wrapper-' + this.id);
+    wrapper.classList.add(
+      'tour-manager-wrapper',
+      'tour-manager-wrapper-' + this.id
+    );
 
     // append wrapper to body
     document.body.appendChild(wrapper);
@@ -37,7 +39,7 @@ export class TourManager {
       this.currentStep = this.steps[this.currentStepIndex];
       this.goToStep(this.currentStep);
     } else {
-      console.error("No Steps Found");
+      console.error('No Steps Found');
     }
   }
 
@@ -56,9 +58,13 @@ export class TourManager {
   }
 
   goToStep(step: TourStep) {
-
+    if (!step) {
+      return;
+    }
     // empty the wrapper div
-    const wrapperDiv = document.querySelector('.tour-manager-wrapper-' + this.id) as HTMLElement;
+    const wrapperDiv = document.querySelector(
+      '.tour-manager-wrapper-' + this.id
+    ) as HTMLElement;
     emptyDomElement(wrapperDiv);
 
     // create dom according to step
@@ -71,9 +77,36 @@ export class TourManager {
       wrapperDiv.appendChild(bodyMask);
     }
 
-    // create spotlight div according to the size of step element
+    if (step.element) {
+      // create spotlight div according to the size of step element
+      let highlightElement: HTMLElement = step.element as HTMLElement;
 
+      if (typeof step.element === 'string') {
+        highlightElement = document.querySelector(step.element) as HTMLElement;
+      }
 
+      console.log(highlightElement);
+      const highlightElementDOMRect = highlightElement.getBoundingClientRect();
+      console.log(highlightElementDOMRect);
+
+      // create spotlight div
+      const spotlightDiv: HTMLElement = document.createElement('div');
+      spotlightDiv.classList.add('tour-spotlight-element');
+
+      spotlightDiv.style.width = highlightElementDOMRect.width + 'px';
+      spotlightDiv.style.height = highlightElementDOMRect.height + 'px';
+
+      spotlightDiv.style.left = highlightElementDOMRect.left + 'px';
+      spotlightDiv.style.top = highlightElementDOMRect.top + 'px';
+
+      wrapperDiv.appendChild(spotlightDiv);
+    }
+  }
+
+  setSteps(steps: TourStep[]) {
+    this.steps = steps.map((step) => {
+      return new TourStep(step);
+    });
   }
 
   uuidv4() {
