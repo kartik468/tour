@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 .tour-spotlight-element {
   position: fixed;
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7), 0 0 1.5rem rgba(0, 0, 0, 0.5);
+  // box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7), 0 0 1.5rem rgba(0, 0, 0, 0.5);
+  box-shadow: rgb(33 33 33 / 80%) 0px 0px 1px 2px, rgb(33 33 33 / 50%) 0px 0px 0px 5000px;
+  border-radius: 2px;
 }
 
 .tour-manager-body-mask {

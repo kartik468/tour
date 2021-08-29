@@ -9,7 +9,10 @@ export class TourManager {
 
   private id!: string;
 
+  reportWindowSizeFn!: () => void;
+
   constructor() {
+    this.reportWindowSizeFn = this.reportWindowSize.bind(this);
     this.initManager();
   }
 
@@ -19,6 +22,8 @@ export class TourManager {
     console.log(this.id);
 
     this.createWrapperDomForTourManager();
+
+    this.addWindowResizeEventHandler();
   }
 
   private createWrapperDomForTourManager() {
@@ -61,6 +66,10 @@ export class TourManager {
     if (!step) {
       return;
     }
+    this.createDomForStepAndPosition(step);
+  }
+
+  createDomForStepAndPosition(step: TourStep) {
     // empty the wrapper div
     const wrapperDiv = document.querySelector(
       '.tour-manager-wrapper-' + this.id
@@ -84,29 +93,54 @@ export class TourManager {
       if (typeof step.element === 'string') {
         highlightElement = document.querySelector(step.element) as HTMLElement;
       }
+      step.highlightElem = highlightElement;
 
       console.log(highlightElement);
-      const highlightElementDOMRect = highlightElement.getBoundingClientRect();
-      console.log(highlightElementDOMRect);
 
       // create spotlight div
       const spotlightDiv: HTMLElement = document.createElement('div');
       spotlightDiv.classList.add('tour-spotlight-element');
+      step.spotlightElem = spotlightDiv;
 
-      spotlightDiv.style.width = highlightElementDOMRect.width + 'px';
-      spotlightDiv.style.height = highlightElementDOMRect.height + 'px';
-
-      spotlightDiv.style.left = highlightElementDOMRect.left + 'px';
-      spotlightDiv.style.top = highlightElementDOMRect.top + 'px';
+      this.positionSpotLightDiv(spotlightDiv, highlightElement);
 
       wrapperDiv.appendChild(spotlightDiv);
     }
+  }
+
+  positionSpotLightDiv(
+    spotlightDiv: HTMLElement,
+    highlightElement: HTMLElement
+  ) {
+    const highlightElementDOMRect = highlightElement.getBoundingClientRect();
+    console.log(highlightElementDOMRect);
+
+    spotlightDiv.style.width = highlightElementDOMRect.width + 'px';
+    spotlightDiv.style.height = highlightElementDOMRect.height + 'px';
+
+    spotlightDiv.style.left = highlightElementDOMRect.left + 'px';
+    spotlightDiv.style.top = highlightElementDOMRect.top + 'px';
   }
 
   setSteps(steps: TourStep[]) {
     this.steps = steps.map((step) => {
       return new TourStep(step);
     });
+  }
+
+  addWindowResizeEventHandler() {
+    window.addEventListener('resize', this.reportWindowSizeFn);
+  }
+
+  removeWindowResizeEventHandler() {
+    window.removeEventListener('resize', this.reportWindowSizeFn);
+  }
+
+  reportWindowSize() {
+    if (this.currentStep && this.currentStep.spotlightElem && this.currentStep.highlightElem) {
+      this.positionSpotLightDiv(this.currentStep.spotlightElem, this.currentStep.highlightElem);
+      console.log(this.currentStep);
+    }
   }
 
   uuidv4() {

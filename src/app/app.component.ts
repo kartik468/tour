@@ -50,8 +50,25 @@ export class AppComponent implements OnInit {
 
     this.tourManager.start();
 
-    setInterval(() => {
+    setTimeout(() => {
+      this.tourManager.goToNextStep();
+    }, 1000);
+    setTimeout(() => {
+      this.tourManager.goToNextStep();
+    }, 2000);
+    setTimeout(() => {
       this.tourManager.goToNextStep();
     }, 3000);
+
+
+    setTimeout(() => {
+      this.tourManager.goToPrevStep();
+    }, 4000);
+    setTimeout(() => {
+      this.tourManager.goToPrevStep();
+    }, 5000);
+    setTimeout(() => {
+      this.tourManager.goToPrevStep();
+    }, 6000);
   }
 }

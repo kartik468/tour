@@ -6,7 +6,8 @@ export class TourStep {
   backdrop?: boolean = true;
   bodyMask?: boolean = true;
 
-
+  highlightElem?: HTMLElement;
+  spotlightElem?: HTMLElement;
 
   constructor(step: TourStep) {
     this.title = step.title;
